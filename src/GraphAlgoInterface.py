@@ -25,7 +25,7 @@ class GraphAlgoInterface:
         @param file_name: The path to the out file
         @return: True if the save was successful, False o.w.
         """
-        raise NotImplementedError
+
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         """
