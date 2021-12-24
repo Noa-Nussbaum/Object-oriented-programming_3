@@ -66,16 +66,21 @@ def check1():
     g_algo = GraphAlgo()  # init an empty graph - for the GraphAlgo
     file = "/Users/nnussbaum/PycharmProjects/Object-oriented-programming_3/JSON files/A3.json"
     g_algo.load_from_json(file)  # init a GraphAlgo from a json file
-    print(g_algo)
+
+    # print(g_algo)
     # s = "h"
     # print("edges:",len(g_algo.edges))
     # print("nodes:",len(g_algo.nodes))
-
+    # print(g_algo.graph.all_out_edges_of_node(2))
+    # print(g_algo.graph.get_edge(2,32)[0]['w'])
+    # print(g_algo.dijkstra(2))
     # print(g_algo.shortest_path(0, 3))
     # print(g_algo.shortest_path(3, 1))
     # print(g_algo.centerPoint())
-    g_algo.save_to_json(file + '_saved')
+    # g_algo.save_to_json(file + '_saved')
     # g_algo.plot_graph()
+    # print(g_algo.graph.edges.get(0,16)[0]['w'])
+
 
 
 # def check2():

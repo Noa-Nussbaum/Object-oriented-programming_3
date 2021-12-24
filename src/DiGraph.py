@@ -6,15 +6,21 @@ from Node import Node
 
 class DiGraph(GraphInterface):
 
-    def __init__(self):
+    def __init__(self, nodes:{}, edges:{})-> None:
+        self.nodes = {(n['id']): n['pos'] for n in nodes}
+        self.edges = {(e['src'], e['dest']): e['w'] for e in edges}
+        self.mc = 0
+
+    def __init__(self)-> None:
         self.nodes = {}
         self.edges = {}
         self.mc = 0
 
-    def __init__(self, nodes={}, edges={}) -> None:
-        self.nodes = {(n['id']): n['pos'] for n in nodes}
-        self.edges = {(e['src'], e['dest']): e['w'] for e in edges}
-        self.mc = 0
+
+    # def __init__(self, other) -> None: #copy constructor
+    #     self.nodes = other.nodes
+    #     self.edges = other.edges
+    #     self.mc = 0
 
     def __repr__(self) -> str:
         return f"Nodes: {self.nodes}\nEdges: {self.edges}"
@@ -86,7 +92,5 @@ class DiGraph(GraphInterface):
            return True
        return False
 
-       #
-       #
-       # def getEdge(self, id1, id2):
-       #     return self.edges[id1][id2]
+    def get_edge(self, id1, id2):
+        return self.edges.get(id1, id2)
