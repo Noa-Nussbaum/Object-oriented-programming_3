@@ -17,11 +17,6 @@ class DiGraph(GraphInterface):
         self.mc = 0
 
 
-    # def __init__(self, other) -> None: #copy constructor
-    #     self.nodes = other.nodes
-    #     self.edges = other.edges
-    #     self.mc = 0
-
     def __repr__(self) -> str:
         return f"Nodes: {self.nodes}\nEdges: {self.edges}"
 
