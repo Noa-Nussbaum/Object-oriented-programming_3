@@ -41,11 +41,9 @@ def check0():
     g.add_edge(1, 3, 1.9)
     g.add_edge(1, 3, 10)
 
-    # g.remove_edge(2,3)
     print(g.v_size())
     print(g.e_size())
     g.remove_edge(1, 3)
-    # g.remove_node(2)
     print(g)  # prints the __repr__ (func output)
     print(g.get_all_v())  # prints a dict with all the graph's vertices.
     print(g.v_size())
@@ -73,25 +71,35 @@ def check1():
     # print("nodes:",len(g_algo.nodes))
     # print(g_algo.graph.all_out_edges_of_node(2))
     # print(g_algo.graph.get_edge(2,32)[0]['w'])
-    # print(g_algo.dijkstra(2))
+    print(g_algo.dijkstra(2))
+    # print(g_algo.shortest_path(2, 32))
     # print(g_algo.shortest_path(0, 3))
     # print(g_algo.shortest_path(3, 1))
     # print(g_algo.centerPoint())
     # g_algo.save_to_json(file + '_saved')
+    # print(g_algo.TSP([23,34,45]))
+    # print(g_algo.dijkstra(5))
+    # print(g_algo.shortest_path(5,36))
+    # prev = g_algo.dijkstra(5)[0]
+    # short = g_algo.dijkstra(5)[1]
+    # g_algo.print_result(prev,short,5,36)
+    # print(g_algo.TSP(g_algo.nodes))
     # g_algo.plot_graph()
     # print(g_algo.graph.edges.get(0,16)[0]['w'])
+    # print(g_algo.shortest_path(0,3))
+    # print(g_algo.centerPoint())
 
 
 
-# def check2():
-#     """ This function tests the naming, basic testing over A5 json file.
-#       :return:
-#     #   """
-    # g_algo = GraphAlgo()
-    # file = '../data/A5.json'
-    # g_algo.load_from_json(file)
+def check2():
+    """ This function tests the naming, basic testing over A5 json file.
+      :return:
+    #   """
+    g_algo = GraphAlgo()
+    file = '/Users/nnussbaum/PycharmProjects/Object-oriented-programming_3/JSON files/A5.json'
+    g_algo.load_from_json(file)
     # g_algo.get_graph().remove_edge(13, 14)
-    # g_algo.save_to_json(file + "_edited")
+    # # g_algo.save_to_json(file + "_edited")
     # dist, path = g_algo.shortest_path(1, 7)
     # print(dist, path)
     # dist, path = g_algo.shortest_path(47, 19)

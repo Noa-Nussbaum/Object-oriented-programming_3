@@ -2,10 +2,12 @@ from typing import List
 import json
 import numpy as np
 from numpy import double
-
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
+import random
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 class GraphAlgo(GraphAlgoInterface):
@@ -97,7 +99,7 @@ class GraphAlgo(GraphAlgoInterface):
             #let's find the node with the lowest weight value
             for node in unvisited:
                 if current == None:
-                    current=node
+                    current = node
                 elif shortest_from_src[node] < shortest_from_src[current]:
                     current = node
 
@@ -109,80 +111,35 @@ class GraphAlgo(GraphAlgoInterface):
                 if value < shortest_from_src[m[0]]:
                     shortest_from_src[m[0]]=value
                     previous_nodes.insert(m[0],current)
-                    #or maybe: previous_nodes.insert(i,current)?
+
 
             unvisited.remove(current)
 
         return previous_nodes, shortest_from_src
 
-
-        # unvisited = list(self.nodes.keys())
-        # distance_from_src = {} #dist between src and other nodes
-        # shortest_path = {}
-        #
-        # for i in unvisited:
-        #     unvisited[i]=float('inf')
-        # # unvisited[0]=0 #dist from src to itself is 0
-        # print(self.graph.v_size())
-        # self.graph.add_node(0,2)
-        # print(self.graph.v_size())
-        # current = self.graph.all_out_edges_of_node(src)
-        # # print(self.get_graph())
-        # # print(self.graph)
-        # # print("unvisited:",unvisited)
-        # print("current",current)
-
-
-
-
-        # Dist_from_src = {v: float('inf') for v in range(self.nodes)} #dist between src and other nodes
-        # Dist_from_src[src] = 0 #dist from src to itself is 0
-        # visited = {i:False for i in range(self.nodes)} #haven't visited and nodes
-        #
-        # pq = PriorityQueue()
-        # # for i in range(len(self.nodes)) pq.put()
-        # pq.put((0, src))
-        #
-        # while not pq.empty():
-        #     (dist, current_vertex) = pq.get()
-        #     self.visited.append(current_vertex)
-        #
-        # for neighbor in range(self.nodes):
-        #     if self.edges[current_vertex][neighbor] != -1:
-        #         distance = self.edges[current_vertex][neighbor]
-        #         if neighbor not in self.visited:
-        #             old_cost = D[neighbor]
-        #             new_cost = D[current_vertex] + distance
-        #             if new_cost < old_cost:
-        #                 pq.put((new_cost, neighbor))
-        #                 Dist[neighbor] = new_cost
-        # return D
-
-    def print_result(self, previous_nodes, shortest_path, start_node, target_node):
-        path = []
-        node = target_node
-
-        while node != start_node:
-            path.append(node)
-            node = previous_nodes[node]
-
-        # Add the start node manually
-        path.append(start_node)
-        print(path)
-
-        # print("We found the following best path with a value of {}.".format(shortest_path[target_node]))
-        # print(" -> ".join(reversed(path)))
+    def is_connected(self):
+        return float('inf') not in self.dijkstra(0)[1]
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         answer = []
-        i=0
-        while i != id2:
-            answer.append(self.dijkstra(id1)[0][i])
-            i=i+1
-        return self.dijkstra(id1)[1][id2], answer
+        node = id2
+
+        list = self.dijkstra(id1)
+        print(list)
+        print(list[0])
+
+        while node != id1:
+            answer.append(node)
+            node = list[0][node]
+
+        answer.append(id1)
+        result = answer[::-1]
+
+        return list[1][id2], result
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
-        #Do we need to check whether it's connected or not?
+        if not self.is_connected():
+            return [],0.0
 
         copy_cities = [j for j in node_lst]# copy node list
         result = []
@@ -225,16 +182,104 @@ class GraphAlgo(GraphAlgoInterface):
 
 
     def centerPoint(self) -> (int, float):
+
+        if not self.is_connected():
+            return None, None
+
+        list = []
+
+        for i in range(len(self.nodes)):
+            dist = self.dijkstra(i)[1] # list of distances
+            # find maximum
+            max=0
+            for j in range(len(dist)):
+                if dist[j]>max:
+                    max=dist[j]
+            list.insert(i,max)
+
+        min = float('inf')
+
+        for i in range(len(list)):
+            if min>list[i]:
+                min=list[i]
+                node = i
+
+        return node, min
+
         """
         Finds the node that has the shortest distance to it's farthest node.
         :return: The nodes id, min-maximum distance
         """
 
     def plot_graph(self) -> None:
+        # x_vals = [1,2,3,4]
+        # y_vals = [1,4,9,16]
+        # plt.plot(x_vals,y_vals,label = "My firs plot :)")
+        # plt.xlabel("x axis ")
+        # plt.ylabel("y axis ")
+        # plt.title("The title of the graph")
+        # plt.legend()
+        # plt.show()
+        #
+        # x = np.arange(0,10,0.1)
+        # plt.figure(figsize=(40,40))
+        # y = np.sin(x)
+        # plt.plot(x,y,"D-")
+        # plt.plot(x_vals,y_vals,"ro-")
+        # plt.show()
+        # #
+        # #
+        # x = [0.15, 0.3, 0.45, 0.6, 0.75]
+        # y = [2.56422, 3.77284, 3.52623, 3.51468, 3.02199]
+        # n = [58, 651, 393, 203, 123]
+
+        # fig, ax = plt.subplots()
+        # ax.scatter(x, y)
+        #
+        # for i, txt in enumerate(n):
+        #     ax.annotate(n[i], (x[i]+0.005, y[i]+0.005)) # arrowprops=dict(arrowstyle="simple")
+        #
+        # plt.plot(x, y)
+        # plt.show()
+        #
+        # fig = plt.figure()
+        # ax = plt.axes(projection="3d")
+        #
+        # z_line = np.linspace(0, 15, 100)
+        # x_line = np.cos(z_line)
+        # y_line = np.sin(z_line)
+        # ax.plot3D(x_line, y_line, z_line, 'gray')
+        #
+        # z_points = 15 * np.random.random(100)
+        # x_points = np.cos(z_points) + 0.1 * np.random.randn(100)
+        # y_points = np.sin(z_points) + 0.1 * np.random.randn(100)
+        # ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv')
+        #
+        # plt.show()
+
+        x = []
+        # for i in range(self.graph.v_size()):
+        # x.append(self.nodes.get(i))
+        print(type(self.nodes.get(0)))
+        # y=[1,7,3,4]
+        # plt.plot(x,y,'go-')
+        # plt.title("oop oop")
+        # plt.xlabel("x")
+        # plt.ylabel("y")
+
+        # c=np.arange(0,10,0.01)
+        # plt.plot([1, 2, 3], [1, 2, 3], 'go-', label='line 1', linewidth=2)
+        # plt.plot([1, 2, 3], [1, 4, 9], 'rs', label='line 2')
+        # cos=np.sin(c)
+        # plt.plot(c,cos)
+        # plt.plot(0, 0, markersize=10, marker='.', color='blue')
+        # plt.plot(x, y, markersize=10, marker='.', color='blue')
+        # plt.text(x, y, str(i.getkey()), color="red", fontsize=12)
+        plt.show()
+
         """
         Plots the graph.
         If the nodes have a position, the nodes will be placed there.
         Otherwise, they will be placed in a random but elegant manner.
         @return: None
         """
-        raise NotImplementedError
