@@ -92,7 +92,7 @@ class GraphAlgo(GraphAlgoInterface):
         shortest_from_src = {i:float('inf') for i in unvisited} #dist between src and other nodes
         shortest_from_src[src] = 0 #dist from src to itself is 0
 
-        previous_nodes=[]
+        previous_nodes={}
 
         while unvisited:
             current = None
@@ -110,8 +110,7 @@ class GraphAlgo(GraphAlgoInterface):
                 value = shortest_from_src[current] + neighbors[i].get(m[0])
                 if value < shortest_from_src[m[0]]:
                     shortest_from_src[m[0]]=value
-                    previous_nodes.insert(m[0],current)
-
+                    previous_nodes[m[0]]=current
 
             unvisited.remove(current)
 
@@ -121,16 +120,18 @@ class GraphAlgo(GraphAlgoInterface):
         return float('inf') not in self.dijkstra(0)[1]
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
+        list = self.dijkstra(id1)
+
+        #if there is no path, return
+        if list[1].get(id2)==float('inf'):
+            return float('inf'),[]
+
         answer = []
         node = id2
 
-        list = self.dijkstra(id1)
-        print(list)
-        print(list[0])
-
         while node != id1:
             answer.append(node)
-            node = list[0][node]
+            node = list[0].get(node)
 
         answer.append(id1)
         result = answer[::-1]
@@ -173,18 +174,10 @@ class GraphAlgo(GraphAlgoInterface):
 
         return result, answer
 
-        """
-        Finds the shortest path that visits all the nodes in the list
-        :param node_lst: A list of nodes id's
-        :return: A list of the nodes id's in the path, and the overall distance
-        """
-
-
-
     def centerPoint(self) -> (int, float):
 
         if not self.is_connected():
-            return None, None
+            return None, float('inf')
 
         list = []
 
@@ -206,10 +199,6 @@ class GraphAlgo(GraphAlgoInterface):
 
         return node, min
 
-        """
-        Finds the node that has the shortest distance to it's farthest node.
-        :return: The nodes id, min-maximum distance
-        """
 
     def plot_graph(self) -> None:
         # x_vals = [1,2,3,4]
