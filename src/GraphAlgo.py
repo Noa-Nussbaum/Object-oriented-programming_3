@@ -48,22 +48,17 @@ class GraphAlgo(GraphAlgoInterface):
             return False
 
     def save_to_json(self, file_name: str) -> bool:
-        list = []
-        dict = {'Nodes': {(i): self.graph.nodes[i] for i in self.graph.nodes}}
-        list.append(dict)
-        dict1 = {'Edges': ''}
-        list.append(dict1)
-        for i in self.graph.nodes:
-            for j in self.graph.all_out_edges_of_node(i).items():
-                list = self.graph.all_out_edges_of_node(i)[j[0]]
-                weight = self.graph.edges.get(j[0])['w']
-                dest = self.graph.edges.get(j[0])['dest']
-                edge = {'src': i, 'dest': dest, 'w': weight}
-                list[len(list)+1]=edge
-        print(list)
-        out_file = open(file_name, "w")
-        json.dump(list, out_file, indent=2)
-        out_file.close()
+        dict = {"Edges": [], "Nodes": []}
+        for i in self.graph.edges.values():
+            dict["Edges"].append({"src": i['src'], "w": i['w'], "dest": i['dest']})
+        for i in self.graph.nodes.values():
+            dict["Nodes"].append({"pos": i.getPos(), "id": i.getId()})
+        try:
+            with open(file_name, 'w') as f:
+                json.dump(dict, indent=2, fp=f)
+        except:
+            return False
+        return True
 
     def dijkstra(self, src: int) -> (list, list):
         unvisited = list(self.nodes.keys())
