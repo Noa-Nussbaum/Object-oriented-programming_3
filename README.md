@@ -25,4 +25,8 @@ The TestDiGraph and TestGraphAlgo classes run tests on both of the classes,respe
 <img width="200" img align="left" src="https://user-images.githubusercontent.com/76524924/147464647-80187134-1f52-4a0a-ad98-4846851da307.png">
 <img width="200" img align="center" src="https://user-images.githubusercontent.com/76524924/147464671-12b04561-bf2a-48e7-84f5-6ca784eba13f.png">
 
+#### Below are the some of the graphs we have created using our plotting function:
+
+
+
 
