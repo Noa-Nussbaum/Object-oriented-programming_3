@@ -4,8 +4,8 @@ from numpy import double
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
+import random
 import matplotlib.pyplot as plt
-import numpy as np
 
 class GraphAlgo(GraphAlgoInterface):
 
@@ -28,7 +28,8 @@ class GraphAlgo(GraphAlgoInterface):
             for n in range(len(dict["Nodes"])):
                 id = dict["Nodes"][n]["id"]
                 if(len(dict["Nodes"][n])==1):
-                    tuple = [np.random.uniform(35, 36), np.random.uniform(32, 33)]
+                    tuple=None
+                    # tuple = [np.random.uniform(35, 36), np.random.uniform(32, 33)]
                     graph.add_node(id, tuple)
                 else:
                     pos = dict["Nodes"][n]["pos"]
@@ -120,7 +121,7 @@ class GraphAlgo(GraphAlgoInterface):
         result = []
         answer = 0
 
-        temp = node_lst[0].getId()
+        temp = node_lst[0]
         result.append(copy_cities[0])
         copy_cities.remove(copy_cities[0])
 
@@ -177,16 +178,29 @@ class GraphAlgo(GraphAlgoInterface):
 
     def plot_graph(self) -> None:
         for v in self.graph.nodes.values():
-            x,y,z = v.getPos()
+            if v.getPos()!=None:
+                x,y,z = v.getPos()
+            else:
+                x = random.randrange(0,100)
+                y = random.randrange(0,100)
+                z = random.randrange(0,100)
+                v.setPos((x,y,z))
             plt.plot(float(x), float(y), markersize=6, marker="o", color="yellow")
             plt.text(float(x), float(y), str(v.id), color="red", fontsize=6)
-            for u in self.graph.edges.values():
-                src=self.graph.nodes.get(u["src"])
-                dest = self.graph.nodes.get(u["dest"])
-                srcX=src.getPos()[0]
-                srcY=src.getPos()[1]
-                destX = dest.getPos()[0]
-                destY = dest.getPos()[1]
-                plt.annotate("", xy=float(srcX,srcY), xytext=float(destX,destY), arrowprops=dict(arrowstyle="->"))
+        for u in self.graph.edges.values():
+            src=self.graph.nodes.get(u["src"])
+            dest = self.graph.nodes.get(u["dest"])
+            srcX=src.getPos()[0]
+            srcY=src.getPos()[1]
+            destX = dest.getPos()[0]
+            destY = dest.getPos()[1]
+            plt.annotate("", xy=(float(srcX),float(srcY)), xytext=(float(destX),float(destY)),
+                         arrowprops=dict(arrowstyle="<-", edgecolor="pink", lw=1.0))
 
         plt.show()
+
+
+
+
+
+
