@@ -20,3 +20,6 @@ In GraphAlgo, we implemented the GraphAlgo interface. We wrote functions that ru
 _Tests:_
 
 The TestDiGraph and TestGraphAlgo classes run tests on both of the classes,respectively. We tested them using JSON files which hold great amounts of nodes and edges in order to check efficiency.
+
+#### Below is the project’s UML diagram, including interfaces, classes, test classes and functions:
+
