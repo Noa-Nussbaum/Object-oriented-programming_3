@@ -1,22 +1,13 @@
 from typing import List
 import json
-import numpy as np
 from numpy import double
 from DiGraph import DiGraph
 from GraphAlgoInterface import GraphAlgoInterface
 from GraphInterface import GraphInterface
-import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class GraphAlgo(GraphAlgoInterface):
-    """This abstract class represents an interface of a graph."""
-
-    def __init__(self, graph:DiGraph)-> None:
-        self.nodes = graph.nodes
-        self.edges = {(e['src'], e['dest']): e['w'] for e in graph.edges}
-        self.graph = DiGraph(self.nodes,self.edges)
 
     def __init__(self)-> None:
         self.nodes = {}
@@ -56,47 +47,35 @@ class GraphAlgo(GraphAlgoInterface):
         except Exception:
             return False
 
-
     def save_to_json(self, file_name: str) -> bool:
-        try:
-            dict_e = {"Edges": self.edges}
-            print("edgelen:", len(dict_e))
-            # dict_n = {"Nodes": self.nodes}
-            # dict_n={}
-            # print(self.nodes)
-            # print("yeah", self.nodes[1]["id"])
-            # for i in self.nodes:
-            #     dict_n.append({"pos": self.nodes[i], "id": i})
-            print(len(self.nodes))
-            print(self.nodes[3])
-            with open(file_name, 'w') as f:
-                # default=lambda a: a.__dict__
-                dict_n = {"Nodes": self.nodes}
-                print(len(dict_n))
-                json.dump(dict_e, indent=2, fp=f, default=lambda a: a.__dict__)
-                # json.dump(dict_n,indent=2, fp=f,default=lambda a: a.__dict__)
-
-                # for i in range(len(self.nodes)):
-                #     g = self.nodes[i]
-                #     json.dump(g, indent=2, fp=f)
-                # json.dump(self.nodes[i], indent=2, fp=f)
-                #     g=self.nodes.get(i)
-                #     print(g)
-                return True
-        except Exception:
-            return False
+        list = []
+        dict = {'Nodes': {(i): self.graph.nodes[i] for i in self.graph.nodes}}
+        list.append(dict)
+        dict1 = {'Edges': ''}
+        list.append(dict1)
+        for i in self.graph.nodes:
+            for j in self.graph.all_out_edges_of_node(i).items():
+                list = self.graph.all_out_edges_of_node(i)[j[0]]
+                weight = self.graph.edges.get(j[0])['w']
+                dest = self.graph.edges.get(j[0])['dest']
+                edge = {'src': i, 'dest': dest, 'w': weight}
+                list[len(list)+1]=edge
+        print(list)
+        out_file = open(file_name, "w")
+        json.dump(list, out_file, indent=2)
+        out_file.close()
 
     def dijkstra(self, src: int) -> (list, list):
         unvisited = list(self.nodes.keys())
 
-        shortest_from_src = {i:float('inf') for i in unvisited} #dist between src and other nodes
-        shortest_from_src[src] = 0 #dist from src to itself is 0
+        shortest_from_src = {i: float('inf') for i in unvisited}  # dist between src and other nodes
+        shortest_from_src[src] = 0  # dist from src to itself is 0
 
-        previous_nodes={}
+        previous_nodes = {}
 
         while unvisited:
             current = None
-            #let's find the node with the lowest weight value
+            # let's find the node with the lowest weight value
             for node in unvisited:
                 if current == None:
                     current = node
@@ -109,8 +88,8 @@ class GraphAlgo(GraphAlgoInterface):
                 m = list(neighbors[i])
                 value = shortest_from_src[current] + neighbors[i].get(m[0])
                 if value < shortest_from_src[m[0]]:
-                    shortest_from_src[m[0]]=value
-                    previous_nodes[m[0]]=current
+                    shortest_from_src[m[0]] = value
+                    previous_nodes[m[0]] = current
 
             unvisited.remove(current)
 
@@ -122,9 +101,9 @@ class GraphAlgo(GraphAlgoInterface):
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         list = self.dijkstra(id1)
 
-        #if there is no path, return
-        if list[1].get(id2)==float('inf'):
-            return float('inf'),[]
+        # if there is no path, return
+        if list[1].get(id2) == float('inf'):
+            return float('inf'), []
 
         answer = []
         node = id2
@@ -140,13 +119,13 @@ class GraphAlgo(GraphAlgoInterface):
 
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         if not self.is_connected():
-            return [],0.0
+            return [], 0.0
 
-        copy_cities = [j for j in node_lst]# copy node list
+        copy_cities = [j for j in node_lst] #copy node list
         result = []
         answer = 0
 
-        temp = node_lst[0]
+        temp = node_lst[0].getId()
         result.append(copy_cities[0])
         copy_cities.remove(copy_cities[0])
 
@@ -156,7 +135,7 @@ class GraphAlgo(GraphAlgoInterface):
             place = -1
             for i in range(len(copy_cities)):
                 open = copy_cities[i]
-                dist = self.shortest_path(temp, open)[0]
+                dist = (self.shortest_path(temp, open))[0]
                 if dist < min:
                     min = dist
                     same = open
@@ -171,6 +150,8 @@ class GraphAlgo(GraphAlgoInterface):
             copy_cities.remove(copy_cities[place])
             if len(copy_cities)==1 and same+1 not in result:
                 result.append(same+1)
+            for i in self.graph.edges.values():
+                answer = answer + i['w']
 
         return result, answer
 
@@ -182,93 +163,35 @@ class GraphAlgo(GraphAlgoInterface):
         list = []
 
         for i in range(len(self.nodes)):
-            dist = self.dijkstra(i)[1] # list of distances
+            dist = self.dijkstra(i)[1]  # list of distances
             # find maximum
-            max=0
+            max = 0
             for j in range(len(dist)):
-                if dist[j]>max:
-                    max=dist[j]
-            list.insert(i,max)
+                if dist[j] > max:
+                    max = dist[j]
+            list.insert(i, max)
 
         min = float('inf')
 
         for i in range(len(list)):
-            if min>list[i]:
-                min=list[i]
+            if min > list[i]:
+                min = list[i]
                 node = i
 
         return node, min
 
-
     def plot_graph(self) -> None:
-        # x_vals = [1,2,3,4]
-        # y_vals = [1,4,9,16]
-        # plt.plot(x_vals,y_vals,label = "My firs plot :)")
-        # plt.xlabel("x axis ")
-        # plt.ylabel("y axis ")
-        # plt.title("The title of the graph")
-        # plt.legend()
-        # plt.show()
-        #
-        # x = np.arange(0,10,0.1)
-        # plt.figure(figsize=(40,40))
-        # y = np.sin(x)
-        # plt.plot(x,y,"D-")
-        # plt.plot(x_vals,y_vals,"ro-")
-        # plt.show()
-        # #
-        # #
-        # x = [0.15, 0.3, 0.45, 0.6, 0.75]
-        # y = [2.56422, 3.77284, 3.52623, 3.51468, 3.02199]
-        # n = [58, 651, 393, 203, 123]
+        for v in self.graph.nodes.values():
+            x,y,z = v.getPos()
+            plt.plot(float(x), float(y), markersize=6, marker="o", color="yellow")
+            plt.text(float(x), float(y), str(v.id), color="red", fontsize=6)
+            for u in self.graph.edges.values():
+                src=self.graph.nodes.get(u["src"])
+                dest = self.graph.nodes.get(u["dest"])
+                srcX=src.getPos()[0]
+                srcY=src.getPos()[1]
+                destX = dest.getPos()[0]
+                destY = dest.getPos()[1]
+                plt.annotate("", xy=float(srcX,srcY), xytext=float(destX,destY), arrowprops=dict(arrowstyle="->"))
 
-        # fig, ax = plt.subplots()
-        # ax.scatter(x, y)
-        #
-        # for i, txt in enumerate(n):
-        #     ax.annotate(n[i], (x[i]+0.005, y[i]+0.005)) # arrowprops=dict(arrowstyle="simple")
-        #
-        # plt.plot(x, y)
-        # plt.show()
-        #
-        # fig = plt.figure()
-        # ax = plt.axes(projection="3d")
-        #
-        # z_line = np.linspace(0, 15, 100)
-        # x_line = np.cos(z_line)
-        # y_line = np.sin(z_line)
-        # ax.plot3D(x_line, y_line, z_line, 'gray')
-        #
-        # z_points = 15 * np.random.random(100)
-        # x_points = np.cos(z_points) + 0.1 * np.random.randn(100)
-        # y_points = np.sin(z_points) + 0.1 * np.random.randn(100)
-        # ax.scatter3D(x_points, y_points, z_points, c=z_points, cmap='hsv')
-        #
-        # plt.show()
-
-        x = []
-        # for i in range(self.graph.v_size()):
-        # x.append(self.nodes.get(i))
-        print(type(self.nodes.get(0)))
-        # y=[1,7,3,4]
-        # plt.plot(x,y,'go-')
-        # plt.title("oop oop")
-        # plt.xlabel("x")
-        # plt.ylabel("y")
-
-        # c=np.arange(0,10,0.01)
-        # plt.plot([1, 2, 3], [1, 2, 3], 'go-', label='line 1', linewidth=2)
-        # plt.plot([1, 2, 3], [1, 4, 9], 'rs', label='line 2')
-        # cos=np.sin(c)
-        # plt.plot(c,cos)
-        # plt.plot(0, 0, markersize=10, marker='.', color='blue')
-        # plt.plot(x, y, markersize=10, marker='.', color='blue')
-        # plt.text(x, y, str(i.getkey()), color="red", fontsize=12)
         plt.show()
-
-        """
-        Plots the graph.
-        If the nodes have a position, the nodes will be placed there.
-        Otherwise, they will be placed in a random but elegant manner.
-        @return: None
-        """

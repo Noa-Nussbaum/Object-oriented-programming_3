@@ -76,19 +76,19 @@ def check1():
     # print(g_algo.shortest_path(0, 3))
     # print(g_algo.shortest_path(3, 1))
     # print(g_algo.centerPoint())
-    # print(g_algo.centerPoint())
     # g_algo.save_to_json(file + '_saved')
-    print(g_algo.TSP(g_algo.nodes))
-    # print(g_algo.dijkstra(5))
-    # print(g_algo.shortest_path(5,36))
+    #print(g_algo.dijkstra(5))
+    #print(g_algo.shortest_path(5,36))
     # prev = g_algo.dijkstra(5)[0]
     # short = g_algo.dijkstra(5)[1]
-    # g_algo.print_result(prev,short,5,36)
-    # print(g_algo.TSP(g_algo.nodes))
-    # g_algo.plot_graph()
-    # print(g_algo.graph.edges.get(0,16)[0]['w'])
+    #g_algo.print_result(prev,short,5,36)
+    print(g_algo.TSP(g_algo.nodes))
+    # print(g_algo.shortest_path(0, 1)[0])
+    #g_algo.plot_graph()
+    # # print(g_algo.graph.edges.get(0,16)[0]['w'])
     # print(g_algo.shortest_path(0,3))
     # print(g_algo.centerPoint())
+    # print("answer ",g_algo.TSP(g_algo.nodes))
 
 
 
@@ -96,9 +96,10 @@ def check2():
     """ This function tests the naming, basic testing over A5 json file.
       :return:
     #   """
-    g_algo = GraphAlgo()
-    file = '/Users/nnussbaum/PycharmProjects/Object-oriented-programming_3/JSON files/A5.json'
-    g_algo.load_from_json(file)
+    # g_algo = GraphAlgo()
+    # file = '/Users/nnussbaum/PycharmProjects/Object-oriented-programming_3/JSON files/A3.json'
+    # g_algo.load_from_json(file)
+    #print(g_algo)
     # g_algo.get_graph().remove_edge(13, 14)
     # # g_algo.save_to_json(file + "_edited")
     # dist, path = g_algo.shortest_path(1, 7)
@@ -110,7 +111,7 @@ def check2():
     # dist, path = g_algo.shortest_path(2, 20)
     # print(dist, path)
     # print(g_algo.TSP([1, 2, 3]))
-    # g_algo.plot_graph()
+    #g_algo.plot_graph()
 
 
 # def check3():
